@@ -1,0 +1,6 @@
+# Include everything in the main package
+include spotify_api/*
+
+# Exclude the scripts folder entirely
+exclude scripts/*
+prune scripts
