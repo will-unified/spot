@@ -1,5 +1,6 @@
 # spotify_api.py
 
+import base64
 import requests
 import time
 from typing import Optional, Dict, Any
@@ -40,14 +41,25 @@ class SpotifyApi:
         return f"{self.AUTHORIZE_URL}?{requests.compat.urlencode(query_params)}"
 
     def exchange_code_for_token(self, code: str) -> Dict[str, Any]:
+        if not self.client_id or not self.client_secret:
+            raise ValueError("client_id and client_secret must be set")
+
+        # Prepare the Authorization header
+        client_creds = f"{self.client_id}:{self.client_secret}"
+        basic_auth = base64.b64encode(client_creds.encode()).decode()
+
+        headers = {
+            "Authorization": f"Basic {basic_auth}",
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
+
         data = {
             "grant_type": "authorization_code",
             "code": code,
             "redirect_uri": self.redirect_uri,
-            "client_id": self.client_id,
-            "client_secret": self.client_secret,
         }
-        response = requests.post(self.TOKEN_URL, data=data)
+
+        response = requests.post(self.TOKEN_URL, data=data, headers=headers)
         response.raise_for_status()
         token_data = response.json()
 
@@ -59,19 +71,35 @@ class SpotifyApi:
         return token_data
 
     def refresh_access_token(self) -> Dict[str, Any]:
+
+        if not self.refresh_token:
+            raise ValueError("Refresh token is required")
+
+        client_creds = f"{self.client_id}:{self.client_secret}"
+        basic_auth = base64.b64encode(client_creds.encode()).decode()
+
+        headers = {
+            "Authorization": f"Basic {basic_auth}",
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
+
         data = {
             "grant_type": "refresh_token",
             "refresh_token": self.refresh_token,
-            "client_id": self.client_id,
-            "client_secret": self.client_secret,
         }
-        response = requests.post(self.TOKEN_URL, data=data)
+
+        response = requests.post(self.TOKEN_URL, data=data, headers=headers)
         response.raise_for_status()
         token_data = response.json()
 
         self.access_token = token_data["access_token"]
         expires_in = token_data["expires_in"]
         self.token_expires_at = time.time() + expires_in - 60
+
+        # Optional: only update refresh_token if returned
+        if "refresh_token" in token_data:
+            self.refresh_token = token_data["refresh_token"]
+
         return token_data
 
     def _get_headers(self) -> Dict[str, str]:
