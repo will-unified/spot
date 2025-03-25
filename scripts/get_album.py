@@ -20,7 +20,7 @@ api = SpotifyApi(
 )
 
 # Step 2: Generate auth URL and open it
-scopes = ["user-library-read", "playlist-modify-private"]
+scopes = ["user-library-read", "playlist-modify-private", "playlist-modify-public"]
 auth_url = api.build_authorize_url(scopes=scopes, state="test")
 
 print("Opening browser to authenticate with Spotify...")

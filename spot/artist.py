@@ -37,3 +37,16 @@ class SpotifyArtist:
         if market:
             params["market"] = market
         return self.api.get(f"/artists/{artist_id}/top-tracks", params=params)
+
+    def search(self, query: str, limit: int = 10, offset: int = 0) -> Dict:
+        """
+        Search for artists by name.
+        https://developer.spotify.com/documentation/web-api/reference/search
+        """
+        params = {
+            "q": query,
+            "type": "artist",
+            "limit": limit,
+            "offset": offset,
+        }
+        return self.api.get("/search", params=params)
