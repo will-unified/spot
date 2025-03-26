@@ -30,7 +30,7 @@ class SpotifyPlaylist:
             data["collaborative"] = collaborative
         if description:
             data["description"] = description
-        self.api.put(f"/playlists/{playlist_id}", data=data)
+        self.api.put(f"/playlists/{playlist_id}", json=data)
 
     def get_items(
         self,
@@ -54,7 +54,7 @@ class SpotifyPlaylist:
         Max 100 URIs.
         """
         data = {"uris": uris}
-        self.api.put(f"/playlists/{playlist_id}/tracks", data=data)
+        self.api.put(f"/playlists/{playlist_id}/tracks", json=data)
 
     def add_playlist_items(
         self, playlist_id: str, uris: List[str], position: Optional[int] = None
