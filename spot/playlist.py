@@ -67,7 +67,7 @@ class SpotifyPlaylist:
         data = {"uris": uris}
         if position is not None:
             data["position"] = position
-        self.api.post(f"/playlists/{playlist_id}/tracks", data=data)
+        self.api.post(f"/playlists/{playlist_id}/tracks", json=data)
 
     def remove_playlist_items(
         self, playlist_id: str, uris: List[str], snapshot_id: Optional[str] = None
@@ -107,7 +107,7 @@ class SpotifyPlaylist:
             data["collaborative"] = collaborative
         if description:
             data["description"] = description
-        return self.api.post(f"/users/{user_id}/playlists", data=data)
+        return self.api.post(f"/users/{user_id}/playlists", json=data)
 
     def get_playlist_cover_image(self, playlist_id: str) -> List[Dict]:
         return self.api.get(f"/playlists/{playlist_id}/images")
