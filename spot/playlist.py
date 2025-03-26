@@ -124,3 +124,16 @@ class SpotifyPlaylist:
         self.api.put(
             f"/playlists/{playlist_id}/images", data=image, content_type="image/jpeg"
         )
+
+    def search(self, query: str, limit: int = 10, offset: int = 0) -> Dict:
+        """
+        Search for playlists by name.
+        https://developer.spotify.com/documentation/web-api/reference/search
+        """
+        params = {
+            "q": query,
+            "type": "playlist",
+            "limit": limit,
+            "offset": offset,
+        }
+        return self.api.get("/search", params=params)

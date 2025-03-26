@@ -30,3 +30,16 @@ class SpotifyTrack:
             "limit": 1,  # You can increase this if you want more results
         }
         return self.api.get("/search", params=params)
+
+    def search(self, query: str, limit: int = 10, offset: int = 0) -> Dict:
+        """
+        Search for tracks by name.
+        https://developer.spotify.com/documentation/web-api/reference/search
+        """
+        params = {
+            "q": query,
+            "type": "track",
+            "limit": limit,
+            "offset": offset,
+        }
+        return self.api.get("/search", params=params)
