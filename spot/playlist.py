@@ -114,7 +114,7 @@ class SpotifyPlaylist:
 
     def upload_playlist_cover_image(self, playlist_id: str, image: bytes) -> None:
         """
-        Upload a custom playlist cover image.
+        Upload a custom playlist cover image to spotify.
         https://developer.spotify.com/documentation/web-api/reference/upload-custom-playlist-cover
 
         - The image must be JPEG format.
