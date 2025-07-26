@@ -129,8 +129,16 @@ class SpotifyApi:
         endpoint: str,
         data: Optional[Dict[str, Any]] = None,
         json: Optional[Dict[str, Any]] = None,
+        params: Optional[Dict[str, Any]] = None,
     ) -> Dict:
         url = f"{self.BASE_API_URL}{endpoint}"
-        response = requests.put(url, headers=self._get_headers(), data=data, json=json)
+        response = requests.put(
+            url,
+            headers=self._get_headers(),
+            params=params,
+            data=data,
+            json=json,
+        )
         response.raise_for_status()
-        return response.json()
+        # Some Spotify `PUT` endpoints return no content (204)
+        return response.json() if response.content else {}
